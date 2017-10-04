@@ -32,7 +32,7 @@ class MicrosatellitePopulation(object):
         self.population_intervals = {}
         self.binned_population_sizes = {}
         self.population_size_frequencies = {}
-        self.ir_df = []
+
 
     def remove_microsattelite(self, micro_sat):
         """Removes a specific microsatellite from all individuals in population data"""
@@ -68,10 +68,11 @@ class MicrosatellitePopulation(object):
             out, bins = pd.cut(self.population_sizes[sat],
                                bins=self.sat_bins[sat],
                                retbins=True)
+
             intervals = [
                 tuple(
                     float(i)
-                    for i in o.translate(None, "()[]").split(', ')
+                    for i in str(o).translate(None, "()[]").split(', ')
                 )
                 for o in set(out)
                 ]
@@ -124,6 +125,7 @@ class MicrosatellitePopulation(object):
     def calc_internal_relatedness(self):
         """Calculates internal relatedness and homozygosity by loci for each sample"""
         self.bin_data()
+        self.ir_df = []
         for sample_name in self.genotypes_df.sample_name.unique():
             l_df = self.genotypes_df[self.genotypes_df.sample_name == sample_name]
             e_homo = 0
